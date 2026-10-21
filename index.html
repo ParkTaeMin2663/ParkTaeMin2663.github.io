@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>박태민 - 컴퓨터공학과 학생 · 오픈소스sw프로그래밍 5팀 '사기전에' OCR/입력 처리 담당</title>
+<meta name="description" content="한밭대학교 컴퓨터공학과 박태민의 포트폴리오">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff; --text: #1f2937; --heading: #111827; --muted: #4b5563;
+    --soft: #6b7280; --line: #e5e7eb; --card: #ffffff; --accent: #1d4ed8;
+    --tag-bg: #111827; --tag-text: #ffffff; --hero-from: #dbe4ff; --hero-to: #ffffff;
+    --symbol: rgba(29, 78, 216, .12);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b1120; --text: #d1d5db; --heading: #f9fafb; --muted: #9ca3af;
+      --soft: #9ca3af; --line: #1f2937; --card: #111827; --accent: #60a5fa;
+      --tag-bg: #e5e7eb; --tag-text: #111827; --hero-from: #172554; --hero-to: #0b1120;
+      --symbol: rgba(96, 165, 250, .14);
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: "IBM Plex Mono", "IBM Plex Sans KR", monospace; line-height: 1.75;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 16px; }
+
+  /* Hero */
+  .hero {
+    position: relative; overflow: hidden;
+    background: linear-gradient(135deg, var(--hero-from), var(--hero-to) 70%);
+    padding: 120px 0 88px;
+  }
+  .hero .symbols span {
+    position: absolute; color: var(--symbol); font-weight: 700; user-select: none;
+  }
+  .hero .hello { font-size: 1.15rem; font-weight: 700; color: var(--muted); margin: 0 0 12px; }
+  .hero h1 { font-size: 3rem; line-height: 1.25; margin: 0 0 16px; color: var(--heading); }
+  .hero h1 span { color: var(--accent); }
+  .hero .sub { color: var(--muted); font-weight: 500; margin: 0 0 32px; max-width: 640px; }
+  .icons { display: flex; gap: 16px; }
+  .icons a { color: var(--heading); display: inline-flex; }
+  .icons svg { width: 26px; height: 26px; }
+
+  /* Sections */
+  section { padding: 72px 0 24px; }
+  h2 {
+    font-size: 1.9rem; color: var(--heading); margin: 0 0 32px; display: inline-block;
+  }
+  h2::after {
+    content: ""; display: block; width: 56%; height: 4px; margin-top: 6px;
+    background: var(--accent); border-radius: 2px;
+  }
+  .about p { color: var(--muted); font-weight: 500; font-size: 1.05rem; margin: 0 0 24px; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0; list-style: none; }
+  .tags li {
+    background: var(--tag-bg); color: var(--tag-text); font-size: .78rem; font-weight: 700;
+    padding: 4px 10px; border-radius: 6px;
+  }
+  .skills .tags li { font-size: .9rem; padding: 6px 14px; }
+
+  /* Project cards */
+  .card {
+    position: relative; background: var(--card); border: 1px solid var(--line);
+    border-radius: 14px; padding: 32px 28px 28px; margin-bottom: 24px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  .card .num { color: var(--accent); font-size: .8rem; font-weight: 700; }
+  .card h3 { font-size: 1.3rem; color: var(--heading); margin: 4px 56px 12px 0; line-height: 1.45; }
+  .card p { color: var(--muted); margin: 0 0 14px; }
+  .card ul.points { color: var(--muted); margin: 0 0 18px; padding-left: 20px; }
+  .card .go {
+    position: absolute; top: 24px; right: 24px; width: 40px; height: 40px; border-radius: 50%;
+    background: var(--tag-bg); color: var(--tag-text); display: grid; place-items: center;
+  }
+  .card .go:hover { text-decoration: none; opacity: .85; }
+  .card .go svg { width: 18px; height: 18px; }
+
+  /* Timeline */
+  .timeline { position: relative; }
+  .item {
+    position: relative; background: var(--card); border: 1px solid var(--line);
+    border-radius: 14px; padding: 28px; margin: 24px 0;
+  }
+  .item::before {
+    content: ""; position: absolute; top: -18px; left: 50%; width: 14px; height: 14px;
+    margin-left: -7px; border-radius: 50%; background: var(--accent);
+  }
+  .item .head { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .item h3 { margin: 0; font-size: 1.15rem; color: var(--heading); }
+  .item .org { color: var(--accent); margin: 2px 0 12px; font-weight: 500; }
+  .item .date { color: var(--soft); font-size: .85rem; white-space: nowrap; }
+  .item ul { color: var(--muted); margin: 0; padding-left: 20px; }
+
+  footer { text-align: center; padding: 64px 0 48px; color: var(--soft); }
+  footer strong { display: block; color: var(--heading); font-size: 1.1rem; }
+
+  @media (max-width: 560px) {
+    .hero { padding: 88px 0 64px; }
+    .hero h1 { font-size: 2.1rem; }
+    h2 { font-size: 1.6rem; }
+    .card { padding: 28px 20px 22px; }
+    .card .go { top: 18px; right: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="symbols" aria-hidden="true">
+    <span style="top:12%;left:6%;font-size:2.4rem">&lt;/&gt;</span>
+    <span style="top:30%;right:10%;font-size:2rem">=&gt;</span>
+    <span style="bottom:14%;left:44%;font-size:1.8rem">[]</span>
+    <span style="top:16%;left:58%;font-size:1.6rem">()</span>
+    <span style="bottom:22%;right:6%;font-size:2.2rem">{}</span>
+    <span style="bottom:10%;left:12%;font-size:1.6rem">::</span>
+  </div>
+  <div class="wrap" style="position:relative">
+    <p class="hello">안녕하세요! 👋</p>
+    <h1>저는 <span>박태민</span>입니다.</h1>
+    <p class="sub">컴퓨터공학과 학생 · 오픈소스sw프로그래밍 팀 프로젝트 5팀 '사기전에' OCR / 입력 처리 담당</p>
+    <div class="icons">
+      <a href="https://github.com/ParkTaeMin2663" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.37-3.87-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.25.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.04 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.58.23 2.75.11 3.04.74.8 1.19 1.83 1.19 3.08 0 4.41-2.69 5.39-5.26 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"/></svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="about">
+    <h2>About Me</h2>
+    <p>
+      한밭대학교 컴퓨터공학과 학생입니다. 「오픈소스SW프로그래밍」 수업 6명 팀 프로젝트에서
+      중고거래 사기 위험 신호를 근거와 함께 알려주는 웹 서비스 '사기전에'의 OCR / 입력 처리 파트를 맡고 있습니다.
+      Issue → 브랜치 → Pull Request → 리뷰로 이어지는 협업 흐름을 직접 익히며, 팀원의 코드를 로컬에서 실행해
+      확인하는 리뷰를 꾸준히 하고 있습니다. 게임 개발(Unity)에도 관심이 많습니다.
+    </p>
+  </section>
+
+  <section class="skills">
+    <h2>Skills</h2>
+    <ul class="tags">
+      <li>Python</li><li>FastAPI</li><li>pytest</li><li>정규표현식</li><li>C#</li>
+      <li>Unity</li><li>Docker</li><li>Git</li><li>GitHub</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Projects</h2>
+
+    <article class="card">
+      <a class="go" href="https://github.com/OSSTEAM5/sagijeone" aria-label="사기전에 저장소">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M7 17 17 7M8 7h9v9"/></svg>
+      </a>
+      <div class="num">01</div>
+      <h3>사기전에 — 중고거래 위험 신호 분석 서비스 (팀 프로젝트, 진행 중)</h3>
+      <p>
+        중고거래 채팅을 붙여넣거나 캡처 이미지로 올리면 안전결제 거부, 빠른 입금 요구, 사칭 URL 같은
+        위험 신호를 원문 근거와 함께 보여주는 웹 서비스입니다. 저는 사용자가 넣은 채팅을 분석 가능한
+        메시지 목록으로 바꾸는 입력 처리(채팅 파서 · OCR)를 담당합니다.
+      </p>
+      <ul class="points">
+        <li>채팅 파서: "판매자: / 구매자:" 형식과 화자 정보가 없는 텍스트를 메시지 목록으로 변환</li>
+        <li>메시지마다 <code>index</code>를 부여해 탐지기가 근거 메시지 위치를 가리킬 수 있게 함
+          (<a href="https://github.com/OSSTEAM5/sagijeone/pull/25">PR #25</a>)</li>
+        <li>다음 단계: EasyOCR로 채팅 캡처에서 텍스트를 추출하고 말풍선 위치로 판매자 / 구매자 구분</li>
+      </ul>
+      <ul class="tags"><li>Python</li><li>FastAPI</li><li>pytest</li><li>GitHub 협업</li></ul>
+    </article>
+
+    <article class="card">
+      <a class="go" href="https://github.com/ParkTaeMin2663/gongga" aria-label="공가 저장소">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M7 17 17 7M8 7h9v9"/></svg>
+      </a>
+      <div class="num">02</div>
+      <h3>공가(空家) — 1인칭 공포 어드벤처 게임 (텀 프로젝트)</h3>
+      <p>
+        철거를 앞둔 1980년대식 복도식 아파트에서, 소리로 사냥하는 괴물을 피해 숨고 문을 닫으며 살아남는
+        Unity 게임입니다. 무기 없이 문 · 서랍 · 레버를 마우스로 직접 잡고 끄는 물리 상호작용이 핵심입니다.
+      </p>
+      <ul class="points">
+        <li>Rigidbody / Joint 기반 문 · 서랍 드래그 조작과 Raycast 상호작용 구조 설계</li>
+        <li>플레이어 소음을 전달하는 NoiseSystem과 NavMesh 괴물 AI(순찰 → 의심 → 추격 → 수색) 설계</li>
+      </ul>
+      <ul class="tags"><li>C#</li><li>Unity 6</li><li>URP</li><li>AI Navigation</li></ul>
+    </article>
+  </section>
+
+  <section>
+    <h2>Experience</h2>
+    <div class="timeline">
+      <div class="item">
+        <div class="head">
+          <h3>OCR / 입력 처리 담당</h3>
+          <span class="date">2026.09 - 현재</span>
+        </div>
+        <p class="org">오픈소스SW프로그래밍 5팀 '사기전에'</p>
+        <ul>
+          <li>채팅 파서(<code>chat_parser.py</code>) 개발 및 팀 데이터 형식(Message)에 맞춘 <code>index</code> 필드 추가</li>
+          <li>의존성 파일명 오타(<code>requirments.txt</code>)를 발견해 Issue 등록 후 수정
+            (<a href="https://github.com/OSSTEAM5/sagijeone/pull/13">PR #13</a>)</li>
+          <li>팀원 PR 5건(URL 탐지기, 단축 URL 목록, 결과 화면, pytest 테스트 등)을 로컬에서 직접 실행해 검증 후 리뷰</li>
+          <li>Issue → 브랜치 → Pull Request → 리뷰 2인 승인 → Merge 협업 규칙에 따라 개발</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Education</h2>
+    <div class="timeline">
+      <div class="item">
+        <div class="head">
+          <h3>컴퓨터공학과</h3>
+          <span class="date">2023년 - 현재</span>
+        </div>
+        <p class="org">한밭대학교</p>
+        <ul>
+          <li>수강: 오픈소스SW프로그래밍 (Python, Git/GitHub, Docker), 게임 물리와 상호작용 (Unity)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <strong>박태민</strong>
+  컴퓨터공학과 학생 · 오픈소스sw프로그래밍 5팀 '사기전에'
+</footer>
+
+</body>
+</html>
