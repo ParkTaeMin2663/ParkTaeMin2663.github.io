@@ -1,6 +1,6 @@
 # ParkTaeMin2663.github.io
 
-한밭대학교 컴퓨터공학과 박태민의 포트폴리오 사이트입니다.
+한밭대학교 컴퓨터공학과 박태민 포트폴리오 사이트입니다.
 
 👉 **https://parktaemin2663.github.io**
 
